@@ -15,11 +15,13 @@ class User
             header("Location: ?page=register&error=empty_fields");
             exit();
         }
+
         // Check if passwords match
         if ($password != $confirm_password) {
             header("Location: ?page=register&error=password_mismatch");
             exit();
         }
+
         // Check for duplicate username or email
         $query = "SELECT COUNT(*) FROM users WHERE username = :username OR email = :email";
         $stmt = $this->db->prepare($query);
@@ -44,7 +46,7 @@ class User
 
         if ($stmt->execute()) {
             $_SESSION['logged_in'] = true;
-            header("Location: ?page=login&success=registered");
+            header("Location: ?page=dashboard");
             exit();
         } else {
 

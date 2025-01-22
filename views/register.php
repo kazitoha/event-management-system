@@ -2,15 +2,15 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Get the form data
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
+    $username = validateString($_POST['username'], 4, 20);
+    $email = validateEmail($_POST['email']);
+    $password = validateString($_POST['password'], 4, 30);
+    $confirm_password = validateString($_POST['confirm_password'], 4, 30);
 
     $user = new User($db);
     $user->register($username, $email, $password, $confirm_password);
 }
-// $db = $database->connect();
+
 ?>
 <!-- <body class=" bg-pattern"> -->
 <div class="account-pages my-5 pt-5">
@@ -35,8 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="card-body p-4">
                         <div class="p-2">
                             <h5 class="mb-5 text-center">Register Account to E M S</h5>
-
-
                             <?php if (isset($_GET['error'])): ?>
                                 <div class="alert alert-danger" role="alert">
                                     <?php
@@ -65,19 +63,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <div class="col-md-12">
                                         <div class="form-group mb-4">
                                             <label for="username">Username</label>
-                                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+                                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
                                         </div>
                                         <div class="form-group mb-4">
                                             <label for="useremail">Email</label>
-                                            <input type="email" class="form-control" id="useremail" name="email" placeholder="Enter email">
+                                            <input type="email" class="form-control" id="useremail" name="email" placeholder="Enter email" required>
                                         </div>
                                         <div class="form-group mb-4">
                                             <label for="userpassword">Password</label>
-                                            <input type="password" class="form-control" id="userpassword" name="password" placeholder="Enter password">
+                                            <input type="password" class="form-control" id="userpassword" name="password" placeholder="Enter password" required>
                                         </div>
                                         <div class="form-group mb-4">
                                             <label for="userpassword">Confirm Password</label>
-                                            <input type="password" name="confirm_password" class="form-control" id="userpassword" placeholder="Enter password">
+                                            <input type="password" name="confirm_password" class="form-control" id="userpassword" placeholder="Enter confrim password" required>
                                         </div>
                                         <div class="mt-4">
                                             <button class="btn btn-info btn-block waves-effect waves-light" type="submit">Register</button>

@@ -2,8 +2,8 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Get the form data
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $email = validateEmail($_POST['email']);
+    $password = validateString($_POST['password'], 4, 30);
 
     $user = new User($db);
     $user->login($email, $password);

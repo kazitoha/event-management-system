@@ -1,7 +1,7 @@
 <?php
 
 // Default page to load
-$page = $_GET['page'] ?? 'register';
+$page = $_GET['page'] ?? 'login';
 
 
 
@@ -12,10 +12,6 @@ switch ($page) {
         $viewFile = __DIR__ . '/../views/register.php';
         break;
     case 'login':
-        $viewFile = __DIR__ . '/../views/login.php';
-        break;
-    case 'logout':
-        session_destroy();
         $viewFile = __DIR__ . '/../views/login.php';
         break;
 

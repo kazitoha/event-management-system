@@ -15,3 +15,65 @@ spl_autoload_register(function ($class) {
         echo "Class file for '$class' not found: $file\n";
     }
 });
+
+
+
+function validateInt($value)
+{
+    $value = trim($value);
+    if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
+        return $value;
+    } else {
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
+}
+
+function validateFloat($value)
+{
+    $value = trim($value);
+    if (filter_var($value, FILTER_VALIDATE_FLOAT) !== false) {
+        return $value;
+    } else {
+        // return "Invalid float value.";
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
+}
+
+function validateString($value, $min = 1, $max = 255)
+{
+    $value = trim($value);
+    if (is_string($value) && strlen($value) >= $min && strlen($value) <= $max) {
+        return htmlspecialchars($value); // Escape special characters
+    } else {
+        // return "Invalid string value. Must be between $min and $max characters.";
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
+}
+
+function validateEmail($value)
+{
+    $value = trim($value);
+    if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        return $value;
+    } else {
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    };
+}
+
+
+
+function validateBoolean($value)
+{
+    $value = trim($value);
+    if (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== null) {
+        return $value;
+    } else {
+        // return "Invalid boolean value.";
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
+}
