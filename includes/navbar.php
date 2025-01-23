@@ -1,8 +1,5 @@
 <body data-sidebar="dark">
-
-    <!-- Begin page -->
     <div id="layout-wrapper">
-
         <header id="page-topbar">
             <div class="navbar-header">
                 <div class="d-flex">
@@ -64,10 +61,6 @@
                             <i class="mdi mdi-fullscreen"></i>
                         </button>
                     </div>
-
-
-
-
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

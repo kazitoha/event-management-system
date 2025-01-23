@@ -3,6 +3,7 @@ $page = $_GET['page'] ?? 'dashboard';
 
 if (isset($_GET['page'])) {
     $page = ucfirst($_GET['page']);
+    $page = str_replace("_", " ", $page);
 }
 
 ?>

@@ -6,13 +6,11 @@ $current_page = strtolower($_GET['page'] ?? 'dashboard'); // Default to 'dashboa
 <div class="vertical-menu">
 
     <div data-simplebar class="h-100">
-
         <!--- Sidemenu -->
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">Menu</li>
-
                 <li>
                     <a href="?page=dashboard" class="waves-effect <?= $current_page == 'dashboard' ? 'text-white' : '' ?>">
                         <i class="mdi mdi-view-dashboard"></i>
@@ -27,15 +25,10 @@ $current_page = strtolower($_GET['page'] ?? 'dashboard'); // Default to 'dashboa
                     </a>
                 </li>
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-email-multiple-outline"></i>
-                        <span>Email</span>
+                    <a href="?page=event" class="waves-effect <?= $current_page == 'event' ? 'text-white' : '' ?>">
+                        <i class="mdi mdi-account-group"></i>
+                        <span>Event Management</span>
                     </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="email-inbox.html">Inbox</a></li>
-                        <li><a href="email-read.html">Email Read</a></li>
-                        <li><a href="email-compose.html">Email Compose</a></li>
-                    </ul>
                 </li>
             </ul>
         </div>

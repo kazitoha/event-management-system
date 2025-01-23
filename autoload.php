@@ -1,8 +1,8 @@
 <?php
-
+ob_start();
 spl_autoload_register(function ($class) {
     // Define the base directory for the classes
-    $baseDir = __DIR__ . '/classes/'; // Use an absolute path to your classes directory
+    $baseDir = __DIR__ . '/classes/';
 
     // Convert the class name to a file path
     $file = $baseDir . $class . '.php';
@@ -18,6 +18,65 @@ spl_autoload_register(function ($class) {
 
 
 
+
+// CSRF Token generation and validation
+
+// if (!isset($_SESSION['csrf_token'])) {
+//     $_SESSION['csrf_token'] = generateCsrfToken();
+// }
+
+// // Validate CSRF Token on POST requests
+// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//     if (isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
+//         // Token valid, continue processing the form
+//         // Optionally, regenerate CSRF token after use to prevent reuse
+//         $_SESSION['csrf_token'] = generateCsrfToken();  // Regenerate token after successful POST
+//     } else {
+//         // CSRF token invalid
+//         echo "Invalid CSRF token.";
+//         exit();
+//     }
+// }
+
+// Generate a CSRF token
+function generateCsrfToken()
+{
+    return bin2hex(random_bytes(32));  // Generate a secure 64-character token
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//connect database
+$database = new Database();
+$db = $database->connect();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// validation system
 function validateInt($value)
 {
     $value = trim($value);
@@ -44,14 +103,15 @@ function validateFloat($value)
 function validateString($value, $min = 1, $max = 255)
 {
     $value = trim($value);
+
     if (is_string($value) && strlen($value) >= $min && strlen($value) <= $max) {
         return htmlspecialchars($value); // Escape special characters
     } else {
-        // return "Invalid string value. Must be between $min and $max characters.";
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     }
 }
+
 
 function validateEmail($value)
 {

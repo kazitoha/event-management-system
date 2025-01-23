@@ -7,17 +7,16 @@ $page = $_GET['page'] ?? 'login';
 
 // Define routing logic
 switch ($page) {
-
     case 'register':
-        $viewFile = __DIR__ . '/../views/register.php';
+        $viewFile = __DIR__ . '/../views/auth/register.php';
         break;
     case 'login':
-        $viewFile = __DIR__ . '/../views/login.php';
+        $viewFile = __DIR__ . '/../views/auth/login.php';
         break;
 
     default:
         $breadcrumb = ['Error', 'Page Not Found'];
-        $viewFile = __DIR__ . '/../views/login.php';
+        $viewFile = __DIR__ . '/../views/auth/login.php';
         break;
 }
 
