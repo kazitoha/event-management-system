@@ -25,7 +25,7 @@ $current_page = strtolower($_GET['page'] ?? 'dashboard'); // Default to 'dashboa
                     </a>
                 </li>
                 <li>
-                    <a href="?page=event" class="waves-effect <?= $current_page == 'event' ? 'text-white' : '' ?>">
+                    <a href="?page=event_management" class="waves-effect <?= $current_page == 'event_management' ? 'text-white' : '' ?>">
                         <i class="mdi mdi-account-group"></i>
                         <span>Event Management</span>
                     </a>

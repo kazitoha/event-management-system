@@ -1,0 +1,17 @@
+# Disable directory browsing
+Options -Indexes
+
+# Allow access to PHP files (if they're being included in your application)
+<Files "*.php">
+    Order Deny,Allow
+    Allow from all
+</Files>
+<Files "autoload.php">
+    Order Deny,Allow
+    Deny from all
+</Files>
+<Files "database.sql">
+    Order Deny,Allow
+    Deny from all
+</Files>
+

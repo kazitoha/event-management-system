@@ -53,6 +53,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <?php endif; ?>
 
                                 <form class="form-horizontal" action="#" method="POST">
+                                    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
+
 
                                     <div class="row">
                                         <div class="col-md-12">

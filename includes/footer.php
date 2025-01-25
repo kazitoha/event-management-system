@@ -25,7 +25,7 @@
 
 <!-- Right bar overlay-->
 <div class="rightbar-overlay"></div>
-
+<script src="assets/loadpage.js"></script>
 <!-- JAVASCRIPT -->
 <script src="assets/libs/jquery/jquery.min.js"></script>
 <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -48,12 +48,21 @@
 <!--  Required datatable js  -->
 <script src="assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<!-- parsleyjs -->
+<script src="assets/libs/parsleyjs/parsley.min.js"></script>
 <!-- Responsive examples -->
 <script src="assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
 <!-- Datatable init js -->
 <script src="assets/js/pages/datatables.init.js"></script>
+<!-- validation init -->
+<script src="assets/js/pages/form-validation.init.js"></script>
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 
