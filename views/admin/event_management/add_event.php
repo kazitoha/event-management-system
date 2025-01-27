@@ -22,8 +22,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <input type="text" name="description" class="form-control" required
-                                    placeholder="Enter event description like tohar biye or somthing" />
+                                <textarea type="text" name="description" class="form-control" required
+                                    placeholder="Enter event description like tohar biye or somthing"></textarea>
                             </div>
 
                             <div class="form-group">
@@ -39,6 +39,12 @@
                                     <span>mm/dd/yyy</span>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="time">Event Time</label>
+                                <input type="time" name="time" value="<?= date('H:i') ?>" class="form-control" required />
+                            </div>
+
+
                             <div class="form-group">
                                 <label>Max Capacity</label>
                                 <input type="number" name="max_capacity" class="form-control" required

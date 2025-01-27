@@ -13,21 +13,19 @@ $current_page = strtolower($_GET['page'] ?? 'dashboard'); // Default to 'dashboa
                 <li class="menu-title">Menu</li>
                 <li>
                     <a href="?page=dashboard" class="waves-effect <?= $current_page == 'dashboard' ? 'text-white' : '' ?>">
-                        <i class="mdi mdi-view-dashboard"></i>
+                        <i class="mdi mdi-desktop-mac-dashboard"></i>
                         <span class="badge badge-pill badge-success float-right">3</span>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
                     <a href="?page=user_management" class="waves-effect <?= $current_page == 'user_management' ? 'text-white' : '' ?>">
-                        <i class="mdi mdi-account-group"></i>
-                        <span>User Management</span>
+                        <i class="fa fa-users"></i> <span>User Management</span>
                     </a>
                 </li>
                 <li>
                     <a href="?page=event_management" class="waves-effect <?= $current_page == 'event_management' ? 'text-white' : '' ?>">
-                        <i class="mdi mdi-account-group"></i>
-                        <span>Event Management</span>
+                        <i class="fa fa-calendar-check"></i> <span>Event Management</span>
                     </a>
                 </li>
             </ul>

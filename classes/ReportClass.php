@@ -1,5 +1,5 @@
 <?php
-class Report
+class ReportClass
 {
     private $db;
 

@@ -1,5 +1,5 @@
 <?php
-class Datatable
+class DatatableClass
 {
     private $db;
     private $table;
@@ -27,17 +27,17 @@ class Datatable
     {
         $this->totalPages = ceil($this->totalRecords / $this->perPage);
     }
-
     public function getData($currentPage = 1)
     {
         $this->currentPage = $currentPage;
         $offset = ($this->currentPage - 1) * $this->perPage;
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} LIMIT :limit OFFSET :offset");
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} ORDER BY id DESC LIMIT :limit OFFSET :offset");
         $stmt->bindValue(':limit', $this->perPage, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function createLinks($baseUrl)
     {

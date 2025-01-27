@@ -1,34 +1,36 @@
 <?php
 
-$event = new Event($db);
+$event = new EventClass($db);
 
 if (isset($_POST['add_event'])) {
-
-
     $name = validateString($_POST['name'], 4, 100);
-    $description = validateString($_POST['description'], 4, 100);
+    $description = validateString($_POST['description'], 4, 400);
     $location = validateString($_POST['location'], 1, 300);
     $date = validateString($_POST['date'], 5, 20);
+    $time = validateString($_POST['time'], 5, 10);
     $max_capacity = validateInt($_POST['max_capacity']);
 
-    $event->createEvent($name, $date, $location, $description, $max_capacity);
+    $event->createEvent($name, $description, $location, $date, $time, $max_capacity);
 }
 
 if (isset($_POST['update_event'])) {
-    $eventId = validateInt($_POST['id']);
+    $eventId = validateString(($_POST['id']));
     $name = validateString($_POST['name'], 4, 100);
-    $description = validateString($_POST['description'], 4, 100);
+    $description = validateString($_POST['description'], 4, 400);
     $location = validateString($_POST['location'], 1, 300);
     $date = validateString($_POST['date'], 5, 20);
     $max_capacity = validateInt($_POST['max_capacity']);
-
     $event->updateEvent($eventId, $name, $date, $location, $description, $max_capacity);
 }
-
+if (isset($_GET['eventId']) && isset($_GET['status'])) {
+    $eventId = validateString($_GET['eventId']);
+    $status = validateString($_GET['status']);
+    $event->changeStatus($eventId, $status);
+}
 
 $table = 'events';
-$perPage = 4;
-$paginator = new Datatable($db, $table, $perPage);
+$perPage = 5;
+$paginator = new DatatableClass($db, $table, $perPage);
 
 $currentPage = isset($_GET['paginate']) && is_numeric($_GET['paginate']) ? (int)$_GET['paginate'] : 1;
 $data = $paginator->getData($currentPage);
@@ -45,40 +47,54 @@ $links = $paginator->createLinks(BASE_URL);
         </div>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover text-center">
                 <thead class="thead-light">
                     <tr>
                         <th>Event Name</th>
                         <th>Location</th>
                         <th>Date</th>
                         <th>Max capacity</th>
+                        <th>Total Register</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($data as $row): ?>
+                    <?php foreach ($data as $key => $row): ?>
                         <tr>
                             <td><?= htmlspecialchars($row['name']); ?></td>
                             <td><?= htmlspecialchars($row['location']); ?></td>
                             <td><?= htmlspecialchars($row['date']); ?></td>
                             <td><?= htmlspecialchars($row['max_capacity']); ?></td>
+                            <td><span class="badge badge-success"><?= $event->sumTotalAttendee($row['id']); ?></span></td>
+
+                            <td>
+                                <span class="badge <?= $row['status'] == '1' ? 'badge-success' : 'badge-danger'; ?>">
+                                    <?= $row['status'] == '1' ? 'Active' : 'Inactive'; ?>
+                                </span>
+                            </td>
+
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">
+                                    <!-- status button -->
+                                    <a href="?page=event_management&eventId=<?= encode($row['id']); ?>&status=<?= ($row['status'] == '1') ? encode(0) : encode(1); ?>"
+                                        class="btn btn-outline-primary btn-sm"><i class=" mdi mdi-refresh " aria-hidden="true"></i> Status</a>
+                                    <!-- edit button -->
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-modal-<?= urlencode($key); ?>"> Edit
+                                        <i class="dripicons-pencil" aria-hidden="true"> </i></button>
+                                    <!-- Include edit user Modal -->
+                                    <?php include 'edit_event.php'; ?>
+                                    <!-- Delete Button -->
+                                    <button class="btn btn-outline-danger btn-sm" onclick="confirmDelete(<?= urlencode($row['id']); ?>)"> <i class=" dripicons-trash " aria-hidden="true"> </i> Delete </button>
                                     <!-- Button with properly constructed link -->
                                     <?php
-                                    $link = WEBSITE_URL . '/' . base64_encode($row['id']) . '/' . urlencode($row['name']); // Full event link
+                                    $link = WEBSITE_URL . '?attendees_url=' . encode($row['id']) . '/' . urlencode($row['name']); // Full event link
                                     ?>
                                     <button type="button"
                                         class="btn btn-outline-dark btn-sm copy-link-btn"
                                         data-link="<?= $link; ?>">
-                                        Copy Link <i class="fa fa-link" aria-hidden="true"></i>
+                                        <i class="fa fa-link" aria-hidden="true"></i> Copy Link
                                     </button>
-
-                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#event-modal-<?= urlencode($row['id']); ?>">Edit <i class=" fas fa-pen " aria-hidden="true"></i></button>
-                                    <!-- Include edit user Modal -->
-                                    <?php include 'edit_event.php'; ?>
-                                    <!-- Delete Button -->
-                                    <button class="btn btn-outline-danger btn-sm" onclick="confirmDelete(<?= urlencode($row['id']); ?>)">Delete</button>
                                 </div>
                             </td>
                         </tr>

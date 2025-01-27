@@ -84,10 +84,12 @@ class User
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = encode($user['id']);
                 $_SESSION['logged_in'] = true;
                 header("Location: ?page=dashboard");
                 exit();
             } else {
+
                 $_SESSION['error_msg'] = "Invalid email or password.";
             }
         } catch (PDOException $e) {

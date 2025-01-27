@@ -39,7 +39,7 @@ function validateString($value, $min = 1, $max = 3000)
     $value = trim($value);
 
     if (is_string($value) && strlen($value) >= $min && strlen($value) <= $max) {
-        return htmlspecialchars($value); // Escape special characters
+        return htmlspecialchars(strip_tags($value)); // Escape special characters
     } else {
         $_SESSION['error_msg'] = "Invalid string value. Length must be between $min and $max characters.";
         if (isset($_SERVER['HTTP_REFERER']) && filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL)) {
@@ -58,7 +58,7 @@ function validateEmail($value)
 {
     $value = trim($value);
     if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
-        return $value;
+        return htmlspecialchars(strip_tags(trim($value)));
     } else {
 
         $_SESSION['error_msg'] = "Invalid email value.";

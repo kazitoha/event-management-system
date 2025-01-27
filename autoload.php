@@ -2,9 +2,11 @@
 ob_start();
 
 
+
 require_once 'config.php';
 
 
+date_default_timezone_set(BASE_TIME);
 
 foreach (glob(__DIR__ . '/helpers/*.php') as $filename) {
     require_once $filename;
@@ -36,5 +38,5 @@ spl_autoload_register(function ($class) {
 
 
 //connect database
-$database = new Database();
+$database = new DatabaseClass();
 $db = $database->connect();

@@ -30,7 +30,7 @@ if (isset($_POST['update_user'])) {
 
 $table = 'users';
 $perPage = 4;
-$paginator = new Datatable($db, $table, $perPage);
+$paginator = new DatatableClass($db, $table, $perPage);
 
 $currentPage = isset($_GET['paginate']) && is_numeric($_GET['paginate']) ? (int)$_GET['paginate'] : 1;
 $data = $paginator->getData($currentPage);
@@ -59,12 +59,15 @@ $links = $paginator->createLinks(BASE_URL);
                 <tbody>
                     <?php foreach ($data as $row): ?>
                         <tr>
-                            <td><?= htmlspecialchars($row['username']); ?></td>
+                            <td>
+                                <?= htmlspecialchars($row['username']); ?>
+                                <?= encode($row['id']) == $_SESSION['user_id'] ? "<span class='badge badge-success'>you</span>" : ''; ?>
+                            </td>
                             <td><?= htmlspecialchars($row['email']); ?></td>
                             <td><?= htmlspecialchars($row['created_at']); ?></td>
                             <td>
                                 <!-- Edit Button -->
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user-modal-<?= urlencode($row['id']); ?>">Edit</button>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user-modal-<?= urlencode(encode($row['id'])); ?>">Edit</button>
 
                                 <!-- Include edit user Modal -->
                                 <?php include 'edit_user.php'; ?>
@@ -73,6 +76,7 @@ $links = $paginator->createLinks(BASE_URL);
                                 <button class="btn btn-outline-danger btn-sm" onclick="confirmDelete(<?= urlencode($row['id']); ?>)">Delete</button>
                             </td>
                         </tr>
+
                     <?php endforeach; ?>
                 </tbody>
             </table>

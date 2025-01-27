@@ -1,4 +1,4 @@
-<div class="modal fade" id="event-modal-<?= urlencode($row['id']); ?>" tabindex="-1"
+<div class="modal fade text-left" id="event-modal-<?= urlencode($key); ?>" tabindex="-1"
     role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -21,8 +21,7 @@
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <input type="text" name="description" class="form-control" value="<?= $row['description'] ?>" required
-                            placeholder="Enter event description like tohar biye or somthing" />
+                        <textarea type="text" name="description" class="form-control" required><?= $row['description'] ?> </textarea>
                     </div>
 
                     <div class="form-group">

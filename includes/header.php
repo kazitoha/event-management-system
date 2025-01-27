@@ -1,5 +1,5 @@
 <?php
-$page = $_GET['page'] ?? 'dashboard';
+$page = $_GET['page'] ?? 'Register attendee';
 
 if (isset($_GET['page'])) {
     $page = ucfirst($_GET['page']);

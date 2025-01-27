@@ -8,12 +8,11 @@ $queryString = '';
 if (isset($urlComponents['query'])) {
     // Convert query string into an associative array
     parse_str($urlComponents['query'], $queryParams);
-
     // Remove the 'paginate' parameter if it exists
     unset($queryParams['paginate']);
 
     // Rebuild the query string without 'paginate'
-    $queryString = http_build_query($queryParams);
+    $queryString = http_build_query($queryParams);  
 }
 
 // Determine the protocol (HTTP or HTTPS)

@@ -5,12 +5,17 @@
                 <div class="d-flex">
                     <!-- LOGO -->
                     <div class="navbar-brand-box">
-                        <a href="index.html" class="logo logo-light">
+                        <a href="#" class="logo logo-light">
+
                             <span class="logo-sm">
-                                <img src="assets/images/logo-sm-light.png" alt="" height="22">
+                                <div class="container-fluid">
+                                    <span class="navbar-brand fw-bold"><?= APP_NAME ?></span>
+                                </div>
                             </span>
                             <span class="logo-lg">
-                                <img src="assets/images/logo-light.png" alt="" height="20">
+                                <div class="container-fluid">
+                                    <span class="navbar-brand text-white fw-bold"><?= APP_NAME ?></span>
+                                </div>
                             </span>
                         </a>
                     </div>
