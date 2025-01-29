@@ -128,7 +128,6 @@ class EventClass
         } catch (PDOException $e) {
             // Roll back the transaction if there is an error
             $this->db->rollBack();
-
             $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
             header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
