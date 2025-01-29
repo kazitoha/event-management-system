@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_attendee'])) 
         <div class="col-md-10">
             <div class="event-header" id="header">
                 <img class="flower-icon" src="https://img.icons8.com/?size=100&id=113573&format=png&color=000000" alt="Flower Icon">
-                <h1 class="paint-order">
+                <h1 class="paint-order ">
                     <span><?= ucwords($checkEventDetails[0]['name']); ?></span>
                 </h1>
                 <h2 class="mt-5 event-name"></h2>
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_attendee'])) 
                             id="phone"
                             placeholder="Enter your phone number"
                             required
-                            pattern="^(\+8801|01)[3-9]\d{8}$"
+                            pattern="^(\+8801|01)[2-9]\d{8}$"
                             title="Phone number must be a valid Bangladeshi number, e.g., +8801XXXXXXXXX or 01XXXXXXXXX">
                     </div>
 

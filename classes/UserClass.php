@@ -1,5 +1,5 @@
 <?php
-class User
+class UserClass
 {
     private $db;
 
@@ -10,6 +10,7 @@ class User
 
     public function register($username, $email, $password, $confirm_password)
     {
+
         // Check for empty fields
         if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
             $_SESSION['error_msg'] = "All fields are required.";
@@ -24,12 +25,16 @@ class User
             exit();
         }
 
+
+
         // Validate email format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $_SESSION['error_msg'] = "Invalid email format.";
             header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
+
+
 
         try {
             // Check for duplicate email
@@ -64,38 +69,6 @@ class User
             $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
         }
         header("Location: " . $_SERVER['HTTP_REFERER']);
-        exit();
-    }
-
-    public function login($email, $password)
-    {
-        // Check for empty fields
-        if (empty($email) || empty($password)) {
-            $_SESSION['error_msg'] = "Email and password are required.";
-            header("Location: ?page=login&error=empty_fields");
-            exit();
-        }
-
-        try {
-            $query = "SELECT * FROM users WHERE email = :email";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-            $stmt->execute();
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = encode($user['id']);
-                $_SESSION['logged_in'] = true;
-                header("Location: ?page=dashboard");
-                exit();
-            } else {
-
-                $_SESSION['error_msg'] = "Invalid email or password.";
-            }
-        } catch (PDOException $e) {
-            $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
-        }
-        header("Location: ?page=login&error=user_not_exist");
         exit();
     }
 
@@ -160,5 +133,30 @@ class User
 
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
+    }
+    function deleteUser($id)
+    {
+        $id = decode($id);
+        $active_user_id = decode($_SESSION['user_id']);
+
+        if ($id == $active_user_id) {
+            $_SESSION['error_msg'] = "User id can't be delete because it's you.";
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
+
+        $query = "DELETE FROM `users` WHERE id=:id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        if ($stmt->execute()) {
+            $_SESSION['success_msg'] = "User deleted successfully.";
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        } else {
+            $_SESSION['error_msg'] = "Failed to update user data.";
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
     }
 }

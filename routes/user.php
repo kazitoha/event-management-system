@@ -15,8 +15,8 @@ if ($attendees_url) {
     if (!empty($parts[0])) {
         $event_encode_id = $parts[0];
         $event_id = decode($event_encode_id);
-        // Check if the event exists
         $attendee = new AttendeeClass($db);
+        // Check if the event exists
         $checkEventDetails = $attendee->checkEventDetails($event_id);
 
         if (!empty($checkEventDetails)) {

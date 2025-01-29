@@ -38,6 +38,36 @@ class DatatableClass
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getEventData($currentPage = 1, $sortBy = 'name', $sortOrder = 'ASC', $searchTerm = '')
+    {
+        $this->currentPage = $currentPage;
+        $offset = ($this->currentPage - 1) * $this->perPage;
+
+        // Ensure the sort order is valid
+        $validColumns = ['name', 'location', 'date', 'max_capacity', 'status'];
+        if (!in_array($sortBy, $validColumns)) {
+            $sortBy = 'name'; // Default to 'name' if invalid column
+        }
+        $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC'; // Default to 'DESC' if invalid order
+
+        // Sanitize and escape search term for LIKE clause
+        $searchTerm = '%' . $searchTerm . '%';
+
+        // Query to fetch data with sorting
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table}
+                                    WHERE name LIKE :searchTerm OR location LIKE :searchTerm
+                                    ORDER BY {$sortBy} {$sortOrder} LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', $this->perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+
 
     public function createLinks($baseUrl)
     {
@@ -53,5 +83,38 @@ class DatatableClass
         $links .= '</ul></nav>';
 
         return $links;
+    }
+
+    public function exportCsv()
+    {
+        // Retrieve all the records
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table}");
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Open the output stream
+        $output = fopen('php://output', 'w');
+
+        // Set the correct headers to force download of the CSV
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $this->table . '_data.csv"');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        // Output CSV column headers (if there is data)
+        if (!empty($data)) {
+            fputcsv($output, array_keys($data[0])); // Use the keys of the first row as the header
+        }
+
+        // Output data rows
+        foreach ($data as $row) {
+            fputcsv($output, $row);
+        }
+
+        // Close the output stream
+        fclose($output);
+
+        // Make sure no further HTML or content is output
+        exit;
     }
 }

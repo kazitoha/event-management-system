@@ -18,14 +18,15 @@ $current_page = strtolower($_GET['page'] ?? 'dashboard'); // Default to 'dashboa
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li>
-                    <a href="?page=user_management" class="waves-effect <?= $current_page == 'user_management' ? 'text-white' : '' ?>">
-                        <i class="fa fa-users"></i> <span>User Management</span>
-                    </a>
-                </li>
+
                 <li>
                     <a href="?page=event_management" class="waves-effect <?= $current_page == 'event_management' ? 'text-white' : '' ?>">
                         <i class="fa fa-calendar-check"></i> <span>Event Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="?page=user_management" class="waves-effect <?= $current_page == 'user_management' ? 'text-white' : '' ?>">
+                        <i class="fa fa-users"></i> <span>User Management</span>
                     </a>
                 </li>
             </ul>

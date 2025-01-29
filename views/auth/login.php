@@ -5,7 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = validateEmail($_POST['email']);
     $password = validateString($_POST['password'], 4, 30);
 
-    $user = new User($db);
+    $user = new LoginClass($db);
     $user->login($email, $password);
 }
 
@@ -70,9 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <div class="mt-4 pt-3">
                                                 <button class="btn btn-info btn-block waves-effect waves-light" type="submit">Log In</button>
                                             </div>
-                                            <div class="mt-4 text-center">
-                                                <a href="?page=register" class="text-muted"><i class="mdi mdi-account-circle mr-1"></i> Create an account</a>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </form>

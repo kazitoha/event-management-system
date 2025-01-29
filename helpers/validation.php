@@ -43,7 +43,7 @@ function validateString($value, $min = 1, $max = 3000)
     } else {
         $_SESSION['error_msg'] = "Invalid string value. Length must be between $min and $max characters.";
         if (isset($_SERVER['HTTP_REFERER']) && filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL)) {
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+            header(header: "Location: " . $_SERVER['HTTP_REFERER']);
         } else {
             // Fallback URL or error message
             header("Location: ?page=error");

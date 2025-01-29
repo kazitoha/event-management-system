@@ -24,11 +24,11 @@
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Enter email">
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Enter password">
                     </div>
                     <div class="form-group">
                         <label for="confirmPassword">Confirm Password</label>
-                        <input type="password" name="confirm_password" class="form-control" id="confirmPassword" placeholder="Enter email">
+                        <input type="password" name="confirm_password" class="form-control" id="confirmPassword" placeholder="Enter confirm password">
                     </div>
                     <button type="submit" class="btn btn-primary" name="update_user">Update</button>
                 </form>

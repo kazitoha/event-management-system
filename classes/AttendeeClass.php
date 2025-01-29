@@ -36,10 +36,10 @@ class AttendeeClass
 
         // Check if the max capacity has been reached
         if ($totalAttendees >= $maxCapacity) {
+            $_SESSION['error_msg'] = "Registration failed! The event has reached its maximum capacity.";
             header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
-
         if ($count > 0) {
             $_SESSION['error_msg'] = "User with this email or phone number already exists.";
             header("Location: " . $_SERVER['HTTP_REFERER']);

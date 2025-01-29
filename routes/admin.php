@@ -17,6 +17,10 @@ switch ($page) {
     case 'event_management':
         $viewFile = __DIR__ . '/../views/admin/event_management/manage_events.php';
         break;
+    case 'attendee_report':
+        $viewFile = __DIR__ . '/../views/admin/report/export_attendee.php';
+        break;
+
 
     default:
         $viewFile = __DIR__ . '/../views/404.php';

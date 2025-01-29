@@ -60,6 +60,7 @@ class EventClass
 
     public function updateEvent($eventId, $name, $date, $location, $description, $max_capacity)
     {
+
         $eventId = decode($eventId);
 
         // Check for empty fields
@@ -105,23 +106,29 @@ class EventClass
     /**
      * Delete an event
      */
-    public function deleteEvent($eventId)
+    public function deleteEventWithAttendee($eventId)
     {
         try {
-            $query = "DELETE FROM events WHERE id = :eventId";
+            $eventId = decode($eventId);
+            // Delete from attendees table
+            $query = "DELETE FROM `attendees` WHERE `event_id` = :eventId";
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':eventId', $eventId, PDO::PARAM_INT);
+            $stmt->execute();
 
-            if ($stmt->execute()) {
-                $_SESSION['success_msg'] = "Event deleted successfully.";
-                header("Location: " . $_SERVER['HTTP_REFERER']);
-                exit();
-            } else {
-                $_SESSION['error_msg'] = "Failed to delete event.";
-                header("Location: " . $_SERVER['HTTP_REFERER']);
-                exit();
-            }
+            // Delete from events table
+            $query = "DELETE FROM `events` WHERE `id` = :eventId";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':eventId', $eventId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $_SESSION['success_msg'] = "Event and related attendees deleted successfully.";
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
         } catch (PDOException $e) {
+            // Roll back the transaction if there is an error
+            $this->db->rollBack();
+
             $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
             header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
@@ -154,6 +161,8 @@ class EventClass
             exit();
         }
     }
+
+
 
 
     /**

@@ -34,13 +34,15 @@ if (!isset($_SESSION['logged_in'])) {
 }
 
 
-
-
 //admin routes
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1) {
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1 && isset($_SESSION['user_id'])) {
     require_once 'includes/navbar.php';
     require_once 'includes/sidebar.php';
     require_once 'includes/breadcrumb.php';
+
     require_once 'routes/admin.php';
+
+
+
     require_once 'includes/footer.php';
 }

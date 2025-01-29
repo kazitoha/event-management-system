@@ -13,7 +13,7 @@
             <div class="modal-body">
                 <form class="custom-validation" action="#" method="post">
                     <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
-                    <input type="hidden" name="id" value="<?= $row['id']; ?>">
+                    <input type="hidden" name="id" value="<?= encode($row['id']); ?>">
                     <div class="form-group">
                         <label>Name</label>
                         <input type="text" name="name" class="form-control" value="<?= $row['name'] ?>" required

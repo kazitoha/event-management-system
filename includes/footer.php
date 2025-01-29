@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-6">
-                <b> 2025 © Khaledul Islam Md. Toha </b>
+                <b> 2025 © Event Management System </b>
             </div>
             <div class="col-sm-6">
                 <div class="text-sm-right d-none d-sm-block">
@@ -58,6 +58,7 @@
 <script src="assets/js/pages/datatables.init.js"></script>
 <!-- validation init -->
 <script src="assets/js/pages/form-validation.init.js"></script>
+<script src="assets/js/pages/timline.init.js"></script>
 <!-- SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 

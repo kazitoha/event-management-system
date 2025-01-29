@@ -1,6 +1,6 @@
 <?php
 
-$user = new User($db);
+$user = new UserClass($db);
 
 if (isset($_POST['add_user'])) {
     $username = validateString($_POST['username'], 4, 20);
@@ -26,7 +26,10 @@ if (isset($_POST['update_user'])) {
     }
     $user->updateUser($userId, $username, $email,  $password, $confirm_password);
 }
-
+if (isset($_GET['delete_id'])) {
+    $user_id = $_GET['delete_id'];
+    $user->deleteUser($user_id);
+}
 
 $table = 'users';
 $perPage = 4;
@@ -37,6 +40,7 @@ $data = $paginator->getData($currentPage);
 
 $links = $paginator->createLinks(BASE_URL);
 
+
 ?>
 
 <div class="card">
@@ -45,7 +49,6 @@ $links = $paginator->createLinks(BASE_URL);
             <h4 class="header-title">User List</h4>
             <button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#add-user-modal">Add User</button>
         </div>
-
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead class="thead-light">
@@ -68,15 +71,15 @@ $links = $paginator->createLinks(BASE_URL);
                             <td>
                                 <!-- Edit Button -->
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user-modal-<?= urlencode(encode($row['id'])); ?>">Edit</button>
-
                                 <!-- Include edit user Modal -->
                                 <?php include 'edit_user.php'; ?>
-
                                 <!-- Delete Button -->
-                                <button class="btn btn-outline-danger btn-sm" onclick="confirmDelete(<?= urlencode($row['id']); ?>)">Delete</button>
+                                <?php if (encode($row['id']) != $_SESSION['user_id']) { ?>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="confirmDelete('<?= encode($row['id']); ?>')">Delete</button>
+                                <?php } ?>
+
                             </td>
                         </tr>
-
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -92,9 +95,13 @@ $links = $paginator->createLinks(BASE_URL);
 
 
 <script>
-    function confirmDelete(userId) {
+    function confirmDelete(encodedUserId) {
+        var userId = decodeURIComponent(encodedUserId); // Decode the ID
+
+        console.log("Delete button clicked for user ID: " + userId); // Log the decoded userId
+
         if (confirm('Are you sure you want to delete this user?')) {
-            window.location.href = 'delete_user.php?id=' + userId;
+            window.location.href = '?page=user_management&delete_id=' + userId;
         }
     }
 </script>

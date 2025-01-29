@@ -6,7 +6,7 @@ define('APP_SECRET_KEY', 'aASDKJ812nqd8sundwqo7821e12n3j12h378');
 
 //this is responsible for turn on and off the validation for development purpose like csrf and other
 // if you are in production mode type this false
-define('APP_DEBUG', true);
+define('APP_DEBUG', false);
 define('BASE_TIME', 'Asia/Dhaka');
 
 

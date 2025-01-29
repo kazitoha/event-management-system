@@ -7,9 +7,6 @@ $page = $_GET['page'] ?? 'login';
 
 // Define routing logic
 switch ($page) {
-    case 'register':
-        $viewFile = __DIR__ . '/../views/auth/register.php';
-        break;
     case 'login':
         $viewFile = __DIR__ . '/../views/auth/login.php';
         break;
