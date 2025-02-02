@@ -9,9 +9,7 @@ class EventClass
         $this->db = $db;
     }
 
-    /**
-     * Create a new event
-     */
+
     public function createEvent($name, $description, $location, $date, $time, $max_capacity)
     {
 
@@ -52,11 +50,6 @@ class EventClass
     }
 
 
-
-
-    /**
-     * Update an event
-     */
 
     public function updateEvent($eventId, $name, $date, $location, $description, $max_capacity)
     {
@@ -103,9 +96,7 @@ class EventClass
         }
     }
 
-    /**
-     * Delete an event
-     */
+
     public function deleteEventWithAttendee($eventId)
     {
         try {
@@ -164,9 +155,7 @@ class EventClass
 
 
 
-    /**
-     * sum Total Attendee
-     */
+
     public function sumTotalAttendee($eventId)
     {
         try {
@@ -181,6 +170,118 @@ class EventClass
             // Log the error or handle it as needed
             error_log("Database Error: " . $e->getMessage());
             return false; // Return false on failure
+        }
+    }
+
+    public function getEventData($currentPage = 1, $perPage = 10, $sortBy = 'name', $sortOrder = 'ASC', $searchTerm = '', $statusFilter = '', $dateFilter = '')
+    {
+        print_r($_POST);
+        $offset = ($currentPage - 1) * $perPage;
+
+        // Validate sorting column
+        $validColumns = ['name', 'location', 'date', 'max_capacity', 'status'];
+        if (!in_array($sortBy, $validColumns)) {
+            $sortBy = 'name';
+        }
+        $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC';
+
+        // Base query
+        $query = "SELECT * FROM events WHERE (name LIKE :searchTerm OR location LIKE :searchTerm)";
+
+        // Filtering by status if provided
+        if ($statusFilter !== '') {
+            $query .= " AND status = :statusFilter";
+        }
+
+        // Filtering by date if provided
+        if ($dateFilter !== '') {
+            $query .= " AND date = :dateFilter";
+        }
+
+        // Sorting and pagination
+        $query .= " ORDER BY $sortBy $sortOrder LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->db->prepare($query);
+
+        // Binding parameters
+        $stmt->bindValue(':searchTerm', "%$searchTerm%", PDO::PARAM_STR);
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+        if ($statusFilter !== '') {
+            $stmt->bindValue(':statusFilter', $statusFilter, PDO::PARAM_INT);
+        }
+        if ($dateFilter !== '') {
+            $stmt->bindValue(':dateFilter', $dateFilter, PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+    public function getTotalEventRecords($searchTerm = '')
+    {
+        $searchTerm = '%' . $searchTerm . '%';
+
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM events WHERE name LIKE :searchTerm OR location LIKE :searchTerm");
+        $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
+
+
+    public function searchEventsAndAttendees($searchTerm)
+    {
+        $searchTerm = '%' . $searchTerm . '%';
+        $query = "SELECT events.*, attendees.name AS attendee_name FROM events 
+                  LEFT JOIN attendees ON events.id = attendees.event_id 
+                  WHERE events.name LIKE :searchTerm OR attendees.name LIKE :searchTerm";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':searchTerm', $searchTerm, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // json api code start from here
+
+    public function getAllEvent()
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM events");
+            $stmt->execute();
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all records
+
+            if ($events) {
+                return ['status' => 'success', 'data' => $events];
+            } else {
+                return ['status' => 'error', 'message' => 'No events found'];
+            }
+        } catch (PDOException $e) {
+            return ['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()];
+        }
+    }
+
+    public function getEventById($eventId)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM events WHERE id = :eventId");
+            $stmt->bindParam(':eventId', $eventId, PDO::PARAM_INT);
+            $stmt->execute();
+            $event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($event) {
+                return ['status' => 'success', 'data' => $event];
+            } else {
+                return ['status' => 'error', 'message' => 'Event not found'];
+            }
+        } catch (PDOException $e) {
+            return ['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()];
         }
     }
 }

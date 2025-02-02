@@ -22,6 +22,11 @@ switch ($page) {
         break;
 
 
+    case 'searchAcrossAndAttendees':
+        $viewFile = __DIR__ . '/../views/admin/searchAcrossEventAndAttendee/search.php';
+        break;
+
+
     default:
         $viewFile = __DIR__ . '/../views/404.php';
         break;

@@ -159,4 +159,43 @@ class UserClass
             exit();
         }
     }
+
+
+
+    public function getTotalUserRecords($searchTerm = '')
+    {
+        $searchTerm = '%' . $searchTerm . '%';
+
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM users WHERE username LIKE :searchTerm OR email LIKE :searchTerm");
+        $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
+
+    public function getUserData($currentPage = 1, $perPage = 10, $sortBy = 'name', $sortOrder = 'ASC', $searchTerm = '')
+    {
+        $offset = ($currentPage - 1) * $perPage;
+        // Ensure the sort order is valid
+        $validColumns = ['username', 'email '];
+        if (!in_array($sortBy, $validColumns)) {
+            $sortBy = 'username'; // Default to 'name' if invalid column
+        }
+        $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC'; // Default to 'DESC' if invalid order
+
+        // Prepare search query
+        $searchTerm = '%' . $searchTerm . '%';
+
+        // Query to fetch data with sorting and pagination
+        $stmt = $this->db->prepare("SELECT * FROM users 
+                                WHERE username LIKE :searchTerm OR email LIKE :searchTerm
+                                ORDER BY $sortBy $sortOrder 
+                                LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

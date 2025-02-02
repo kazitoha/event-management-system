@@ -32,18 +32,20 @@ if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
     $event->deleteEventWithAttendee($delete_id);
 }
-
-$table = 'events';
-$perPage = 3;
-$paginator = new DatatableClass($db, $table, $perPage);
+$event = new EventClass($db);
+$perPage = 2;
+$paginator = new DatatableClass($event, $perPage);
 
 $currentPage = isset($_GET['paginate']) && is_numeric($_GET['paginate']) ? (int)$_GET['paginate'] : 1;
 $sortBy = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'name';
 $sortOrder = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
-$data = $paginator->getEventData($currentPage, $sortBy, $sortOrder, $searchTerm);
+$statusFilter = isset($_GET['status_filter']) ? $_GET['status_filter'] : '';
+$dateFilter = isset($_GET['date_filter']) ? $_GET['date_filter'] : '';
 
+$data = $event->getEventData($currentPage, $perPage, $sortBy, $sortOrder, $searchTerm, $statusFilter, $dateFilter);
 $links = $paginator->createLinks(BASE_URL);
+
 
 
 ?>
@@ -56,11 +58,23 @@ $links = $paginator->createLinks(BASE_URL);
             <button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#add-event-modal">Add Event</button>
         </div>
         <div class="text-left p-2">
-            <form id="search-form">
+
+
+            <form id="search-form" method="GET">
                 <input type="text" id="search-input" name="search" placeholder="Search..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
-                <button type="button" class="btn btn-outline-primary btn-sm" onclick="submitSearch()">Search</button>
+                <select name="status_filter">
+                    <option value="">All Status</option>
+                    <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Active</option>
+                    <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>Inactive</option>
+                </select>
+
+                <input type="date" name="date_filter" value="<?= isset($_GET['date_filter']) ? htmlspecialchars($_GET['date_filter']) : '' ?>">
+
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="submitSearch()">Filter</button>
             </form>
+
         </div>
+
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center">
                 <thead class="thead-light">

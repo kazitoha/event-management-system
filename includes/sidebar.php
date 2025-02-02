@@ -29,6 +29,11 @@ $current_page = strtolower($_GET['page'] ?? 'dashboard'); // Default to 'dashboa
                         <i class="fa fa-users"></i> <span>User Management</span>
                     </a>
                 </li>
+                <li>
+                    <a href="?page=searchAcrossAndAttendees" class="waves-effect <?= $current_page == 'searchacrossandattendees' ? 'text-white' : '' ?>">
+                        <i class="fa fa-search"></i> <span>Search Event/Attendee</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
