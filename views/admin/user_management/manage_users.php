@@ -44,38 +44,43 @@ $links = $paginator->createLinks(BASE_URL);
 
 
 ?>
-
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="header-title">User List</h4>
             <button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#add-user-modal">Add User</button>
         </div>
-        <div class="text-left p-2">
-            <form id="search-form">
-                <input type="text" id="search-input" name="search" placeholder="Search..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
-                <button type="button" class="btn btn-outline-primary btn-sm" onclick="submitSearch()">Search</button>
+
+        <!-- Search Form -->
+        <div class="text-left p-3 mb-4 bg-light rounded">
+            <form id="search-form" method="GET" class="form-inline">
+                <div class="form-group mb-2">
+                    <input type="text" id="search-input" name="search" class="form-control form-control-sm" placeholder="Search..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+                </div>
+                <button type="button" class="btn btn-outline-primary btn-sm mb-2 ml-2" onclick="submitSearch()">Filter</button>
             </form>
         </div>
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+
+
+        <!-- Table -->
+        <div class="table-responsive mt-3">
+            <table class="table table-bordered table-hover text-center">
                 <thead class="thead-light">
                     <tr>
-
                         <th>
-                            <a class="text-dark" href="?page=user_management&paginate=<?= $currentPage ?>&sort_by=name&sort_order=<?= ($sortBy == 'name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC' ?>">User Name<i class=" mdi mdi-arrow-up-down-bold "></i></a>
+                            <a class="text-dark" href="?page=user_management&paginate=<?= $currentPage ?>&sort_by=username&sort_order=<?= ($sortBy == 'username' && $sortOrder == 'ASC') ? 'DESC' : 'ASC' ?>">User Name <i class="mdi mdi-arrow-up-down-bold"></i></a>
                         </th>
                         <th>
-                            <a class="text-dark" href="?page=user_management&paginate=<?= $currentPage ?>&sort_by=name&sort_order=<?= ($sortBy == 'name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC' ?>"> Email <i class=" mdi mdi-arrow-up-down-bold "></i></a>
+                            <a class="text-dark" href="?page=user_management&paginate=<?= $currentPage ?>&sort_by=email&sort_order=<?= ($sortBy == 'email' && $sortOrder == 'ASC') ? 'DESC' : 'ASC' ?>">Email <i class="mdi mdi-arrow-up-down-bold"></i></a>
                         </th>
                         <th>
-                            <a class="text-dark" href="?page=user_management&paginate=<?= $currentPage ?>&sort_by=name&sort_order=<?= ($sortBy == 'name' && $sortOrder == 'ASC') ? 'DESC' : 'ASC' ?>"> Created at<i class=" mdi mdi-arrow-up-down-bold "></i></a>
+                            <a class="text-dark" href="?page=user_management&paginate=<?= $currentPage ?>&sort_by=created_at&sort_order=<?= ($sortBy == 'created_at' && $sortOrder == 'ASC') ? 'DESC' : 'ASC' ?>">Created At <i class="mdi mdi-arrow-up-down-bold"></i></a>
                         </th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($data as $row): ?>
+                    <?php foreach ($data as $key => $row): ?>
                         <tr>
                             <td>
                                 <?= htmlspecialchars($row['username']); ?>
@@ -85,7 +90,7 @@ $links = $paginator->createLinks(BASE_URL);
                             <td><?= htmlspecialchars($row['created_at']); ?></td>
                             <td>
                                 <!-- Edit Button -->
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user-modal-<?= urlencode(encode($row['id'])); ?>">Edit</button>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user-modal-<?= urlencode($key); ?>">Edit</button>
                                 <!-- Include edit user Modal -->
                                 <?php include 'edit_user.php'; ?>
                                 <!-- Delete Button -->
@@ -106,14 +111,15 @@ $links = $paginator->createLinks(BASE_URL);
         </nav>
     </div>
 </div>
-<?php include 'add_user.php'; ?>
 
+<!-- Add User Modal -->
+<?php include 'add_user.php'; ?>
 
 <script>
     function confirmDelete(encodedUserId) {
-        var userId = decodeURIComponent(encodedUserId); // Decode the ID
+        var userId = decodeURIComponent(encodedUserId);
 
-        console.log("Delete button clicked for user ID: " + userId); // Log the decoded userId
+        console.log("Delete button clicked for user ID: " + userId);
 
         if (confirm('Are you sure you want to delete this user?')) {
             window.location.href = '?page=user_management&delete_id=' + userId;
@@ -122,9 +128,15 @@ $links = $paginator->createLinks(BASE_URL);
 
     function submitSearch() {
         var searchTerm = document.getElementById('search-input').value;
-        var encodedSearchTerm = encodeURIComponent(searchTerm); // URL encode the search term
+        var encodedSearchTerm = encodeURIComponent(searchTerm);
 
         // Redirect to the search results page with the encoded search term
         window.location.href = "?page=user_management&search=" + encodedSearchTerm;
     }
+    document.getElementById('search-input').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            submitSearch();
+        }
+    });
 </script>

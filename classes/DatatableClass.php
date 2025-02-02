@@ -1,31 +1,31 @@
 <?php
 class DatatableClass
 {
-    private $eventClass;
+    private $loadClasses;
     private $perPage;
     private $currentPage;
     private $totalRecords;
     private $totalPages;
 
-    public function __construct($eventClass, $perPage = 10)
+    public function __construct($loadClasses, $perPage = 10)
     {
-        $this->eventClass = $eventClass;
+        $this->loadClasses = $loadClasses;
         $this->perPage = $perPage;
     }
 
-    public function getData($currentPage = 1, $sortBy = 'name', $sortOrder = 'ASC', $searchTerm = '', $page)
+    public function getData($currentPage = 1, $sortBy = 'name', $sortOrder = 'ASC', $searchTerm = '', $page, $statusFilter = '', $dateFilter = '')
     {
         $this->currentPage = $currentPage;
 
         if ($page == 'event_management') {
-            $this->totalRecords = $this->eventClass->getTotalEventRecords($searchTerm);
+            $this->totalRecords = $this->loadClasses->getTotalEventRecords($searchTerm);
             $this->totalPages = ceil($this->totalRecords / $this->perPage);
-            return $this->eventClass->getEventData($this->currentPage, $this->perPage, $sortBy, $sortOrder, $searchTerm);
+            return $this->loadClasses->getEventData($this->currentPage, $this->perPage, $sortBy, $sortOrder, $searchTerm, $statusFilter, $dateFilter);
         }
         if ($page = 'user_management') {
-            $this->totalRecords = $this->eventClass->getTotalUserRecords($searchTerm);
+            $this->totalRecords = $this->loadClasses->getTotalUserRecords($searchTerm);
             $this->totalPages = ceil($this->totalRecords / $this->perPage);
-            return $this->eventClass->getUserData($this->currentPage, $this->perPage, $sortBy, $sortOrder, $searchTerm);
+            return $this->loadClasses->getUserData($this->currentPage, $this->perPage, $sortBy, $sortOrder, $searchTerm);
         }
     }
 

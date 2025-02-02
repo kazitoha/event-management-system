@@ -175,7 +175,6 @@ class EventClass
 
     public function getEventData($currentPage = 1, $perPage = 10, $sortBy = 'name', $sortOrder = 'ASC', $searchTerm = '', $statusFilter = '', $dateFilter = '')
     {
-        print_r($_POST);
         $offset = ($currentPage - 1) * $perPage;
 
         // Validate sorting column

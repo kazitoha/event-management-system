@@ -1,4 +1,4 @@
-<div class="modal fade" id="user-modal-<?= urlencode(encode($row['id'])); ?>" tabindex="-1"
+<div class="modal fade text-left" id="user-modal-<?= urlencode($key); ?>" tabindex="-1"
     role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

@@ -2,8 +2,16 @@
 ob_start();
 
 
-
 require_once 'config.php';
+
+// error reporting
+if (APP_DEBUG == 1) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+} else {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+}
 
 
 date_default_timezone_set(BASE_TIME);

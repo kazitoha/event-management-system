@@ -64,6 +64,21 @@
 
 <!-- SweetAlert2 JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function search_animal() {
+        let input = document.getElementById('searchbar').value
+        input = input.toLowerCase();
+        let x = document.getElementsByClassName('search_bar');
+
+        for (i = 0; i < x.length; i++) {
+            if (!x[i].innerHTML.toLowerCase().includes(input)) {
+                x[i].style.display = "none";
+            } else {
+                x[i].style.display = "list-item";
+            }
+        }
+    }
+</script>
 
 </body>
 

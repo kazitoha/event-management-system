@@ -11,7 +11,7 @@ $current_page = strtolower($_GET['page'] ?? 'dashboard'); // Default to 'dashboa
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">Menu</li>
-                <li>
+                <li class="search_bar">
                     <a href="?page=dashboard" class="waves-effect <?= $current_page == 'dashboard' ? 'text-white' : '' ?>">
                         <i class="mdi mdi-desktop-mac-dashboard"></i>
                         <span class="badge badge-pill badge-success float-right">3</span>
@@ -19,17 +19,17 @@ $current_page = strtolower($_GET['page'] ?? 'dashboard'); // Default to 'dashboa
                     </a>
                 </li>
 
-                <li>
+                <li class="search_bar">
                     <a href="?page=event_management" class="waves-effect <?= $current_page == 'event_management' ? 'text-white' : '' ?>">
                         <i class="fa fa-calendar-check"></i> <span>Event Management</span>
                     </a>
                 </li>
-                <li>
+                <li class="search_bar">
                     <a href="?page=user_management" class="waves-effect <?= $current_page == 'user_management' ? 'text-white' : '' ?>">
                         <i class="fa fa-users"></i> <span>User Management</span>
                     </a>
                 </li>
-                <li>
+                <li class="search_bar">
                     <a href="?page=searchAcrossAndAttendees" class="waves-effect <?= $current_page == 'searchacrossandattendees' ? 'text-white' : '' ?>">
                         <i class="fa fa-search"></i> <span>Search Event/Attendee</span>
                     </a>

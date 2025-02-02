@@ -1,18 +1,12 @@
+<?php
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = generateCsrfToken();
+}
+?>
 <link href="assets/css/register_attendee.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_attendee'])) {
 
-    $eventId = validateString($_POST['encode_id']);
-    $maxCapacity = validateString($_POST['max_capacity']);
-    $full_name = validateString($_POST['full_name'], 3, 100);
-    $email = validateEmail($_POST['email']);
-    $phone_number = validateString($_POST['phone_number'], 4, 20);
-    $attendee = new AttendeeClass($db);
-    $attendee->registerAttendee($eventId, $maxCapacity, $full_name, $email, $phone_number);
-}
-?>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -28,13 +22,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_attendee'])) 
             </div>
             <div class="form-container">
                 <div id="confirmationMessage" style="display:none; margin-top:20px;" class="alert alert-info"></div>
-                <form id="registrationForm" method="post">
+                <form id="registrationForm">
                     <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="encode_id" value="<?= $event_encode_id; ?>">
-                    <input type="hidden" name="max_capacity" value="<?= $checkEventDetails[0]['max_capacity']; ?>">
+                    <input type="hidden" name="max_capacity" value="<?= encode($checkEventDetails[0]['max_capacity']); ?>">
                     <div class="form-group">
                         <label for="name">Full Name</label>
-                        <input type="text" class="form-control" name="full_name" placeholder="Enter your full name" required>
+                        <input type="text" class="form-control" name="full_name" id="full_name" placeholder="Enter your full name" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email Address</label>
@@ -66,3 +60,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_attendee'])) 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <!-- SweetAlert2 JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $('#registrationForm').submit(function(e) {
+            e.preventDefault(); // Prevent default form submission
+
+            var formData = {
+                csrf_token: $("input[name='csrf_token']").val(),
+                encode_id: $("input[name='encode_id']").val(),
+                max_capacity: $("input[name='max_capacity']").val(),
+                full_name: $('#full_name').val(),
+                email: $('#email').val(),
+                phone: $('#phone').val(),
+            };
+
+            $.ajax({
+                url: 'views/user/insert_attendee_ajax.php',
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === "success") {
+                        Swal.fire({
+                            title: "Success!",
+                            text: response.message,
+                            icon: "success"
+                        }).then(() => {
+                            $("#registrationForm")[0].reset();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error!",
+                            text: response.message,
+                            icon: "error"
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Something went wrong. Please try again.",
+                        icon: "error"
+                    });
+                    console.error("AJAX Error: ", status, error);
+                }
+            });
+        });
+    });
+</script>
