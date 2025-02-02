@@ -43,9 +43,7 @@ class EventClass
                 exit();
             }
         } catch (PDOException $e) {
-            $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-            exit();
+            echo "Connection Error: " . $e->getMessage();
         }
     }
 
@@ -90,9 +88,7 @@ class EventClass
                 exit();
             }
         } catch (PDOException $e) {
-            $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-            exit();
+            echo "Connection Error: " . $e->getMessage();
         }
     }
 
@@ -119,9 +115,7 @@ class EventClass
         } catch (PDOException $e) {
             // Roll back the transaction if there is an error
             $this->db->rollBack();
-            $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-            exit();
+            echo "Connection Error: " . $e->getMessage();
         }
     }
 
@@ -146,9 +140,7 @@ class EventClass
                 exit();
             }
         } catch (PDOException $e) {
-            $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-            exit();
+            echo "Connection Error: " . $e->getMessage();
         }
     }
 
@@ -167,84 +159,94 @@ class EventClass
             $totalAttendees = $stmt->fetchColumn();
             return $totalAttendees;
         } catch (PDOException $e) {
-            // Log the error or handle it as needed
-            error_log("Database Error: " . $e->getMessage());
-            return false; // Return false on failure
+            echo "Connection Error: " . $e->getMessage();
         }
     }
 
     public function getEventData($currentPage = 1, $perPage = 10, $sortBy = 'name', $sortOrder = 'ASC', $searchTerm = '', $statusFilter = '', $dateFilter = '')
     {
-        $offset = ($currentPage - 1) * $perPage;
+        try {
+            $offset = ($currentPage - 1) * $perPage;
 
-        // Validate sorting column
-        $validColumns = ['name', 'location', 'date', 'max_capacity', 'status'];
-        if (!in_array($sortBy, $validColumns)) {
-            $sortBy = 'name';
+            // Validate sorting column
+            $validColumns = ['name', 'location', 'date', 'max_capacity', 'status'];
+            if (!in_array($sortBy, $validColumns)) {
+                $sortBy = 'name';
+            }
+            $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC';
+
+            // Base query
+            $query = "SELECT * FROM events WHERE (name LIKE :searchTerm OR location LIKE :searchTerm)";
+
+            // Filtering by status if provided
+            if ($statusFilter !== '') {
+                $query .= " AND status = :statusFilter";
+            }
+
+            // Filtering by date if provided
+            if ($dateFilter !== '') {
+                $query .= " AND date = :dateFilter";
+            }
+
+            // Sorting and pagination
+            $query .= " ORDER BY $sortBy $sortOrder LIMIT :limit OFFSET :offset";
+
+            $stmt = $this->db->prepare($query);
+
+            // Binding parameters
+            $stmt->bindValue(':searchTerm', "%$searchTerm%", PDO::PARAM_STR);
+            $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+            if ($statusFilter !== '') {
+                $stmt->bindValue(':statusFilter', $statusFilter, PDO::PARAM_INT);
+            }
+            if ($dateFilter !== '') {
+                $stmt->bindValue(':dateFilter', $dateFilter, PDO::PARAM_STR);
+            }
+
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Connection Error: " . $e->getMessage();
         }
-        $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC';
-
-        // Base query
-        $query = "SELECT * FROM events WHERE (name LIKE :searchTerm OR location LIKE :searchTerm)";
-
-        // Filtering by status if provided
-        if ($statusFilter !== '') {
-            $query .= " AND status = :statusFilter";
-        }
-
-        // Filtering by date if provided
-        if ($dateFilter !== '') {
-            $query .= " AND date = :dateFilter";
-        }
-
-        // Sorting and pagination
-        $query .= " ORDER BY $sortBy $sortOrder LIMIT :limit OFFSET :offset";
-
-        $stmt = $this->db->prepare($query);
-
-        // Binding parameters
-        $stmt->bindValue(':searchTerm', "%$searchTerm%", PDO::PARAM_STR);
-        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-
-        if ($statusFilter !== '') {
-            $stmt->bindValue(':statusFilter', $statusFilter, PDO::PARAM_INT);
-        }
-        if ($dateFilter !== '') {
-            $stmt->bindValue(':dateFilter', $dateFilter, PDO::PARAM_STR);
-        }
-
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
 
     public function getTotalEventRecords($searchTerm = '')
     {
-        $searchTerm = '%' . $searchTerm . '%';
+        try {
+            $searchTerm = '%' . $searchTerm . '%';
 
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM events WHERE name LIKE :searchTerm OR location LIKE :searchTerm");
-        $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
-        $stmt->execute();
+            $stmt = $this->db->prepare("SELECT COUNT(*) FROM events WHERE name LIKE :searchTerm OR location LIKE :searchTerm");
+            $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
+            $stmt->execute();
 
-        return $stmt->fetchColumn();
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            echo "Connection Error: " . $e->getMessage();
+        }
     }
 
 
     public function searchEventsAndAttendees($searchTerm)
     {
-        $searchTerm = '%' . $searchTerm . '%';
-        $query = "SELECT events.*, attendees.name AS attendee_name FROM events 
+        try {
+            $searchTerm = '%' . $searchTerm . '%';
+            $query = "SELECT events.*, attendees.name AS attendee_name FROM events 
                   LEFT JOIN attendees ON events.id = attendees.event_id 
                   WHERE events.name LIKE :searchTerm OR attendees.name LIKE :searchTerm";
 
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':searchTerm', $searchTerm, PDO::PARAM_STR);
-        $stmt->execute();
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':searchTerm', $searchTerm, PDO::PARAM_STR);
+            $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Connection Error: " . $e->getMessage();
+        }
     }
 
     // json api code start from here

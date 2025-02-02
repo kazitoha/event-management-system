@@ -136,27 +136,31 @@ class UserClass
     }
     function deleteUser($id)
     {
-        $id = decode($id);
-        $active_user_id = decode($_SESSION['user_id']);
+        try {
+            $id = decode($id);
+            $active_user_id = decode($_SESSION['user_id']);
 
-        if ($id == $active_user_id) {
-            $_SESSION['error_msg'] = "User id can't be delete because it's you.";
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-            exit();
-        }
+            if ($id == $active_user_id) {
+                $_SESSION['error_msg'] = "User id can't be delete because it's you.";
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit();
+            }
 
-        $query = "DELETE FROM `users` WHERE id=:id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        if ($stmt->execute()) {
-            $_SESSION['success_msg'] = "User deleted successfully.";
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-            exit();
-        } else {
-            $_SESSION['error_msg'] = "Failed to update user data.";
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-            exit();
+            $query = "DELETE FROM `users` WHERE id=:id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->execute()) {
+                $_SESSION['success_msg'] = "User deleted successfully.";
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit();
+            } else {
+                $_SESSION['error_msg'] = "Failed to update user data.";
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit();
+            }
+        } catch (PDOException $e) {
+            $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
         }
     }
 
@@ -164,38 +168,46 @@ class UserClass
 
     public function getTotalUserRecords($searchTerm = '')
     {
-        $searchTerm = '%' . $searchTerm . '%';
+        try {
+            $searchTerm = '%' . $searchTerm . '%';
 
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM users WHERE username LIKE :searchTerm OR email LIKE :searchTerm");
-        $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
-        $stmt->execute();
+            $stmt = $this->db->prepare("SELECT COUNT(*) FROM users WHERE username LIKE :searchTerm OR email LIKE :searchTerm");
+            $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
+            $stmt->execute();
 
-        return $stmt->fetchColumn();
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
+        }
     }
 
     public function getUserData($currentPage = 1, $perPage = 10, $sortBy = 'name', $sortOrder = 'ASC', $searchTerm = '')
     {
-        $offset = ($currentPage - 1) * $perPage;
-        // Ensure the sort order is valid
-        $validColumns = ['username', 'email '];
-        if (!in_array($sortBy, $validColumns)) {
-            $sortBy = 'username'; // Default to 'name' if invalid column
-        }
-        $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC'; // Default to 'DESC' if invalid order
+        try {
+            $offset = ($currentPage - 1) * $perPage;
+            // Ensure the sort order is valid
+            $validColumns = ['username', 'email '];
+            if (!in_array($sortBy, $validColumns)) {
+                $sortBy = 'username'; // Default to 'name' if invalid column
+            }
+            $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC'; // Default to 'DESC' if invalid order
 
-        // Prepare search query
-        $searchTerm = '%' . $searchTerm . '%';
+            // Prepare search query
+            $searchTerm = '%' . $searchTerm . '%';
 
-        // Query to fetch data with sorting and pagination
-        $stmt = $this->db->prepare("SELECT * FROM users 
+            // Query to fetch data with sorting and pagination
+            $stmt = $this->db->prepare("SELECT * FROM users 
                                 WHERE username LIKE :searchTerm OR email LIKE :searchTerm
                                 ORDER BY $sortBy $sortOrder 
                                 LIMIT :limit OFFSET :offset");
-        $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
-        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
+            $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
+            $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
+        }
     }
 }

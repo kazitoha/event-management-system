@@ -4,7 +4,7 @@ $event = new EventClass($db);
 
 if (isset($_POST['add_event'])) {
     $name = validateString($_POST['name'], 3, 100);
-    $description = validateString($_POST['description'], 4, 400);
+    $description = validateString($_POST['description'], 4, 800);
     $location = validateString($_POST['location'], 1, 300);
     $date = validateString($_POST['date'], 5, 20);
     $time = validateString($_POST['time'], 5, 10);
@@ -16,7 +16,7 @@ if (isset($_POST['add_event'])) {
 if (isset($_POST['update_event'])) {
     $eventId = validateString(($_POST['id']));
     $name = validateString($_POST['name'], 4, 100);
-    $description = validateString($_POST['description'], 4, 400);
+    $description = validateString($_POST['description'], 4, 800);
     $location = validateString($_POST['location'], 1, 300);
     $date = validateString($_POST['date'], 5, 20);
     $max_capacity = validateInt($_POST['max_capacity']);
@@ -33,7 +33,7 @@ if (isset($_GET['delete_id'])) {
     $event->deleteEventWithAttendee(eventId: $delete_id);
 }
 $event = new EventClass($db);
-$perPage = 2; // Number of events per page
+$perPage = 3; // Number of events per page
 $paginator = new DatatableClass($event, $perPage);
 
 $currentPage = isset($_GET['paginate']) && is_numeric($_GET['paginate']) ? (int)$_GET['paginate'] : 1;
@@ -137,12 +137,12 @@ $links = $paginator->createLinks(BASE_URL);
 
                                         <!-- Copy Link button -->
                                         <button type="button" class="btn btn-outline-dark btn-sm copy-link-btn" data-link="<?= WEBSITE_URL . '?attendees_url=' . encode($row['id']) . '/' . urlencode($row['name']); ?>" data-toggle="tooltip" title="Copy this link and share it with the attendees who have registered for this event.">
-                                            <i class="fa fa-link"></i>
+                                            <i class="fa fa-link"> Copy Link</i>
                                         </button>
 
                                         <!-- CSV Export Button -->
                                         <a href="views/admin/report/export_attendee.php?event_id=<?= encode($row['id']); ?>" class="btn btn-outline-dark btn-sm" data-toggle="tooltip" title="Export Attendees">
-                                            <i class="fas fa-file-csv"></i>
+                                            <i class="fas fa-file-csv"> Export</i>
                                         </a>
                                     </div>
                                 </td>

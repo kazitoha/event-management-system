@@ -9,7 +9,12 @@ A PHP-based event management system that allows users to create, manage, and tra
 ## 🌐 Live Demo
 
 You can view a live demo of this project at the following link:  
-[Live Demo of Event Management System](https://your-live-demo-url.com)
+
+[Live Demo of Event Management System](https://ems.fenigaacademy.edu.bd/)
+
+### admin panel user id
+Email: admin@mail.com
+Password: 121314
 
 ---
 
@@ -56,11 +61,6 @@ define('DB_USER', 'root'); // set your database username
 define('DB_PASS', ''); // set your database password
 ```
 
-### admin panel user id
-Email: admin@mail.com
-Password: 121314
-
-
 ## 📡 JSON API Details
 
 The Event Management System provides a JSON API that allows you to interact with event data programmatically.
@@ -72,7 +72,7 @@ The Event Management System provides a JSON API that allows you to interact with
    - **Description**: Retrieves all events from the database.
    - **Example Request**:
      ```
-     GET http://localhost/event-management-system/api/?action=list
+     GET https://ems.fenigaacademy.edu.bd/api/?action=list
      ```
 
 2. **Get Event by ID**
@@ -81,5 +81,5 @@ The Event Management System provides a JSON API that allows you to interact with
    - **Description**: Retrieves a specific event by its ID.
    - **Example Request**:
      ```
-     GET http://localhost/event-management/api/?action=view&id=4
+     GET https://ems.fenigaacademy.edu.bd/api/?action=view&id=4
      ```

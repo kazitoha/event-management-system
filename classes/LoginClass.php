@@ -33,7 +33,7 @@ class LoginClass
                 $_SESSION['error_msg'] = "Invalid email or password.";
             }
         } catch (PDOException $e) {
-            $_SESSION['error_msg'] = "Database error: " . $e->getMessage();
+            echo "Connection Error: " . $e->getMessage();
         }
         header("Location: ?page=login&error=user_not_exist");
         exit();

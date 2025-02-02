@@ -8,21 +8,45 @@ class AttendeeClass
         $this->db = $db;
     }
 
+
+
+
     public function checkEventDetails($event_id)
     {
         try {
             $status = 1;
-            $query = "SELECT * FROM `events` WHERE `status` = :status AND  `id`=:id";
+            $query = "SELECT * FROM `events` WHERE `status` = :status AND `id` = :id";
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':status', $status, PDO::PARAM_INT);
             $stmt->bindParam(':id', $event_id, PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $event = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($event) {
+
+                $eventDate = $event['date'];
+
+                $currentDateTime = new DateTime();
+                $currentDate = $currentDateTime->format('Y-m-d');
+                if ($event[0]['date'] <= $currentDate) {
+                    $status = encode(0);
+                    $event_id = encode($event_id);
+                    $event = new EventClass($this->db);
+                    $event->changeStatus($event_id, $status);
+                    return false;
+                } else {
+                    return $event;
+                }
+            } else {
+                return false;
+            }
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
         }
     }
+
+
 
     public function registerAttendee($eventId, $maxCapacity, $full_name, $email, $phone_number)
     {
@@ -67,8 +91,7 @@ class AttendeeClass
                 return ["status" => "error", "message" => "Error while registering attendee."];
             }
         } catch (PDOException $e) {
-            // Log the error or handle it as needed
-            return  $e->getMessage(); // Return false on failure
+            return "Connection Error: " . $e->getMessage();
         }
     }
 
@@ -84,9 +107,7 @@ class AttendeeClass
             $totalAttendees = $stmt->fetchColumn();
             return $totalAttendees;
         } catch (PDOException $e) {
-            // Log the error or handle it as needed
-            error_log("Database Error: " . $e->getMessage());
-            return false; // Return false on failure
+            return "Connection Error: " . $e->getMessage();
         }
     }
 }

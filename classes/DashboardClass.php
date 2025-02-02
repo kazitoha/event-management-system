@@ -11,41 +11,57 @@ class DashboardClass
 
     public function getTotalEvent()
     {
-        $query = "SELECT COUNT(*) AS total FROM `events`";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total']; // Return only the count
+        try {
+            $query = "SELECT COUNT(*) AS total FROM `events`";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['total'];
+        } catch (PDOException $e) {
+            echo "Connection Error: " . $e->getMessage();
+        }
     }
     public function getTotalAttendee()
     {
-        $query = "SELECT COUNT(*) AS total FROM `attendees`";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total']; // Return only the count
+        try {
+            $query = "SELECT COUNT(*) AS total FROM `attendees`";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['total'];
+        } catch (PDOException $e) {
+            echo "Connection Error: " . $e->getMessage();
+        }
     }
     public function getActiveEvent()
     {
-        $query = "SELECT name, description,  location, date, 
+        try {
+            $query = "SELECT name, description,  location, date, 
                     (SELECT count(*) FROM `events` WHERE `status` = 1) AS total
                   FROM `events`
                   WHERE `status` = 1";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all rows
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $result; // Return all rows with the sum as 'total'
+            return $result;
+        } catch (PDOException $e) {
+            echo "Connection Error: " . $e->getMessage();
+        }
     }
 
 
 
     public function getInactiveEvent()
     {
-        $query = "SELECT COUNT(*) AS total FROM `events` WHERE `status` = 0";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total']; // Return only the count
+        try {
+            $query = "SELECT COUNT(*) AS total FROM `events` WHERE `status` = 0";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['total'];
+        } catch (PDOException $e) {
+            echo "Connection Error: " . $e->getMessage();
+        }
     }
 }
