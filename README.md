@@ -43,7 +43,7 @@ Password: 121314
 3. Place the project inside the `htdocs` folder, e.g.:
 
 ##  2️⃣ Project Installation Guide
-1. Clone the repository: ``` git clone https://github.com/yourusername/event-management.git ```
+1. Clone the repository: ``` git clone https://github.com/kazitoha/event-management-system.git ```
 2. Navigate to the project directory: ```cd event-management```
 
 ### 3️⃣ Database Setup
