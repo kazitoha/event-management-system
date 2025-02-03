@@ -13,8 +13,8 @@ You can view a live demo of this project at the following link:
 [Live Demo of Event Management System](https://ems.fenigaacademy.edu.bd/)
 
 ### admin panel user id
-Email: admin@mail.com
-Password: 121314
+Email: `admin@mail.com`
+Password: `121314`
 
 ---
 
